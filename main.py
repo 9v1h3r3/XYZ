@@ -154,4 +154,4 @@ if __name__=="__main__":
     def target_wrapper(): run_bot_process("cookies.json","targets.txt","messages.txt","prefix.txt",concurrency=3)
     supervisor=BotSupervisor(target_fn=target_wrapper); supervisor.start()
     log("[parent] Starting Flask on 0.0.0.0:8080")
-    app.run(host="0.0.0.0",port=5000,threaded=True)
+    app.run(host="0.0.0.0",port=8080,threaded=True)
