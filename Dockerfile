@@ -1,26 +1,27 @@
-# Base Python image (stable)
+# ✅ Stable base image
 FROM python:3.12-slim
 
 WORKDIR /app
 
-# System deps
+# ✅ Install system dependencies manually (Playwright safe set)
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    build-essential libffi-dev wget ca-certificates \
-    fonts-liberation libnss3 libatk-bridge2.0-0 libx11-xcb1 libxcomposite1 \
-    libxdamage1 libxrandr2 libasound2 libatk1.0-0 libcups2 libgtk-3-0 \
-    libgbm1 libpango-1.0-0 libxshmfence1 && \
+    wget gnupg ca-certificates fonts-liberation libnss3 libatk-bridge2.0-0 \
+    libx11-xcb1 libxcomposite1 libxdamage1 libxrandr2 libasound2 libatk1.0-0 \
+    libcups2 libgtk-3-0 libgbm1 libpango-1.0-0 libxshmfence1 \
+    fonts-unifont fonts-ubuntu && \
     rm -rf /var/lib/apt/lists/*
 
+# ✅ Copy dependency list first for Docker caching
 COPY requirements.txt .
 
-# Upgrade pip + install deps
 RUN pip install --upgrade pip setuptools wheel && \
     pip install --no-cache-dir -r requirements.txt
 
+# ✅ Copy bot & data files
 COPY bot.py cookies.json targets.txt messages.txt prefix.txt ./
 
-# Install Chromium (Playwright)
-RUN python -m playwright install chromium --with-deps
+# ✅ Install Playwright Chromium manually (skip --with-deps)
+RUN python -m playwright install chromium
 
 EXPOSE 8080
 CMD ["python", "bot.py"]
