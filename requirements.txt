@@ -1,2 +1,16 @@
-flask
-playwright
+{
+  "name": "e2ee-secret-bot",
+  "version": "1.0.0",
+  "main": "e2ee-secret-bot-autonomous.js",
+  "scripts": {
+    "start": "node e2ee-secret-bot-autonomous.js",
+    "save-state": "node save_storage_state.js"
+  },
+  "dependencies": {
+    "playwright": "^1.36.0",
+    "node-fetch": "^2.6.7"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
