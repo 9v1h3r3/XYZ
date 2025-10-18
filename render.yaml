@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: fb-e2ee-bot
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: MIN_DELAY_MS
+        value: 3000
+      - key: MAX_DELAY_MS
+        value: 7000
+      - key: CYCLE_WAIT_MS
+        value: 90000
