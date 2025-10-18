@@ -29,6 +29,7 @@ STATUS = {
 
 # ================== UTILS ==================
 def now(): return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
 def log(msg):
     line = f"[{now()}] {msg}"
     print(line)
@@ -40,7 +41,8 @@ def log(msg):
 
 # ================== FLASK ROUTES ==================
 @app.route("/")
-def home(): return "✅ Messenger Bot Running!"
+def home():
+    return "✅ Messenger Bot Running!"
 
 @app.route("/status")
 def status():
@@ -108,11 +110,9 @@ async def send_message_to_target(page, target_id, messages, prefix, login_id):
 async def safe_send_messages(cookie_file, targets_file, messages_file, prefix_file, concurrency=1):
     STATUS["running"] = True
 
-    # Load cookies
+    # Load cookies (Playwright compatible)
     with open(cookie_file, "r", encoding="utf-8") as f:
-        raw_cookies = json.load(f)
-    cookies = [{"name": c["key"], "value": c["value"], "domain": c["domain"], "path": c.get("path","/")}
-               for c in raw_cookies if "key" in c and "value" in c]
+        cookies = json.load(f)
 
     login_cookie = next((c for c in cookies if c["name"] == "c_user"), None)
     STATUS["login_id"] = login_cookie["value"] if login_cookie else "Unknown"
@@ -141,7 +141,10 @@ async def safe_send_messages(cookie_file, targets_file, messages_file, prefix_fi
 
     # Launch browser
     async with async_playwright() as p:
-        browser = await p.chromium.launch(headless=False, args=["--no-sandbox","--disable-setuid-sandbox"])
+        browser = await p.chromium.launch(
+            headless=True,  # Server friendly
+            args=["--no-sandbox","--disable-setuid-sandbox"]
+        )
         context = await browser.new_context()
         await context.add_cookies(cookies)
 
