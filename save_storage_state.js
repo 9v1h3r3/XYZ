@@ -1,25 +1,29 @@
-// save_storage_state.js
-const { chromium } = require('playwright');
 const fs = require('fs');
-const path = require('path');
+const { chromium } = require('playwright');
 
 (async () => {
-  console.log('Launching headed browser. Please log in to Facebook in the opened window.');
-  const browser = await chromium.launch({ headless: false });
-  const context = await browser.newContext({ viewport: { width: 1280, height: 800 } });
+  // Load cookies.json
+  if (!fs.existsSync('cookies.json')) {
+    console.error('[❌] cookies.json not found! Create it first.');
+    process.exit(1);
+  }
+
+  const cookies = JSON.parse(fs.readFileSync('cookies.json', 'utf8'));
+
+  // Launch headless browser
+  const browser = await chromium.launch({ headless: true, args: ['--no-sandbox'] });
+  const context = await browser.newContext();
+
+  // Add cookies to context
+  await context.addCookies(cookies);
+
+  // Open Facebook to initialize session
   const page = await context.newPage();
+  await page.goto('https://www.facebook.com/messages', { waitUntil: 'domcontentloaded' });
 
-  await page.goto('https://www.facebook.com/');
-  console.log('\n> Log in to Facebook in the opened browser window.');
-  console.log('> OPTIONAL: Open the secret conversation(s) you want the bot to access (https://www.facebook.com/messages/e2ee/t/{UID}).');
-  console.log('When ready, return to this terminal and press ENTER to save storageState.json');
+  // Save storageState.json
+  await context.storageState({ path: 'storageState.json' });
+  console.log('[✅] storageState.json created successfully from cookies.');
 
-  process.stdin.setEncoding('utf8');
-  process.stdin.once('data', async () => {
-    const outPath = path.resolve(__dirname, 'storageState.json');
-    await context.storageState({ path: outPath });
-    console.log(`Saved storageState.json to: ${outPath}`);
-    await browser.close();
-    process.exit(0);
-  });
+  await browser.close();
 })();
