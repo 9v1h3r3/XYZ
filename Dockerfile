@@ -1,31 +1,45 @@
-# ✅ Stable base image
-FROM python:3.12-slim
+# ===========================
+# 🔹 Base image: lightweight Python
+# ===========================
+FROM python:3.13-slim
 
+# ===========================
+# 🔹 Set working directory
+# ===========================
 WORKDIR /app
 
-# ✅ Install Playwright dependencies (minimal stable set)
+# ===========================
+# 🔹 Copy project files
+# ===========================
+COPY . /app
+
+# ===========================
+# 🔹 Install base system dependencies
+# ===========================
 RUN apt-get update && apt-get install -y --no-install-recommends \
     wget gnupg ca-certificates \
-    fonts-liberation fonts-noto-color-emoji fonts-dejavu-core \
-    libnss3 libatk-bridge2.0-0 libx11-xcb1 libxcomposite1 \
-    libxdamage1 libxrandr2 libasound2 libatk1.0-0 libcups2 \
-    libgtk-3-0 libgbm1 libpango-1.0-0 libxshmfence1 \
+    fonts-liberation libnss3 libatk-bridge2.0-0 libx11-xcb1 \
+    libxcomposite1 libxdamage1 libxrandr2 libasound2 libatk1.0-0 \
+    libcups2 libgtk-3-0 libgbm1 libpango-1.0-0 libxshmfence1 \
+    fonts-unifont fonts-freefont-ttf \
     && rm -rf /var/lib/apt/lists/*
 
-# ✅ Copy requirements first (Docker layer cache optimization)
-COPY requirements.txt .
+# ===========================
+# 🔹 Install Python dependencies
+# ===========================
+RUN pip install --no-cache-dir -r requirements.txt
 
-RUN pip install --upgrade pip setuptools wheel && \
-    pip install --no-cache-dir -r requirements.txt
-
-# ✅ Copy project files
-COPY bot.py cookies.json targets.txt messages.txt prefix.txt ./
-
-# ✅ Install Playwright Chromium manually (no --with-deps)
+# ===========================
+# 🔹 Install Playwright Chromium
+# ===========================
 RUN python -m playwright install chromium
 
-# ✅ Expose Flask port
-EXPOSE 8080
+# ===========================
+# 🔹 Expose Flask Port (Replit/Render use 5000)
+# ===========================
+EXPOSE 5000
 
-# ✅ Start the bot
+# ===========================
+# 🔹 Start the bot
+# ===========================
 CMD ["python", "bot.py"]
