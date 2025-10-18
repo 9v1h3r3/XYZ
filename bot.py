@@ -29,7 +29,6 @@ STATUS = {
 
 # ================== UTILS ==================
 def now(): return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-
 def log(msg):
     line = f"[{now()}] {msg}"
     print(line)
@@ -41,8 +40,7 @@ def log(msg):
 
 # ================== FLASK ROUTES ==================
 @app.route("/")
-def home():
-    return "✅ Messenger Bot Running!"
+def home(): return "✅ Messenger Bot Running!"
 
 @app.route("/status")
 def status():
@@ -102,7 +100,7 @@ async def send_message_to_target(page, target_id, messages, prefix, login_id):
             await input_box.press("Enter")
             log(f"[{login_id}] -> {target_id} -> {thread_name} -> Sent ✅ {full_msg[:50]}")
             STATUS["sent_count"] += 1
-            await asyncio.sleep(5)  # wait between messages
+            await asyncio.sleep(5)
         except Exception as e:
             log(f"[{login_id}] -> Error sending to {target_id}: {e}")
             STATUS["errors"] += 1
@@ -110,9 +108,14 @@ async def send_message_to_target(page, target_id, messages, prefix, login_id):
 async def safe_send_messages(cookie_file, targets_file, messages_file, prefix_file, concurrency=1):
     STATUS["running"] = True
 
-    # Load cookies (Playwright compatible)
-    with open(cookie_file, "r", encoding="utf-8") as f:
-        cookies = json.load(f)
+    # Load cookies
+    try:
+        with open(cookie_file, "r", encoding="utf-8") as f:
+            cookies = json.load(f)
+    except:
+        log("[!] Failed to load cookies.")
+        STATUS["running"] = False
+        return
 
     login_cookie = next((c for c in cookies if c["name"] == "c_user"), None)
     STATUS["login_id"] = login_cookie["value"] if login_cookie else "Unknown"
@@ -124,27 +127,34 @@ async def safe_send_messages(cookie_file, targets_file, messages_file, prefix_fi
         return
 
     # Load targets
-    with open(targets_file, "r", encoding="utf-8") as f:
-        targets = [l.strip() for l in f if l.strip()]
+    try:
+        with open(targets_file, "r", encoding="utf-8") as f:
+            targets = [l.strip() for l in f if l.strip()]
+    except:
+        log("[!] Failed to load targets.")
+        targets = []
     if not targets:
         log("[!] No targets provided.")
         STATUS["running"] = False
         return
 
     # Load messages
-    with open(messages_file, "r", encoding="utf-8") as f:
-        messages = [l.strip() for l in f if l.strip()]
-
+    try:
+        with open(messages_file, "r", encoding="utf-8") as f:
+            messages = [l.strip() for l in f if l.strip()]
+    except:
+        messages = ["Hello!"]
+    
     # Load prefix
-    with open(prefix_file, "r", encoding="utf-8") as f:
-        prefix = f.read().strip()
+    try:
+        with open(prefix_file, "r", encoding="utf-8") as f:
+            prefix = f.read().strip()
+    except:
+        prefix = ""
 
     # Launch browser
     async with async_playwright() as p:
-        browser = await p.chromium.launch(
-            headless=True,  # Server friendly
-            args=["--no-sandbox","--disable-setuid-sandbox"]
-        )
+        browser = await p.chromium.launch(headless=False, args=["--no-sandbox","--disable-setuid-sandbox"])
         context = await browser.new_context()
         await context.add_cookies(cookies)
 
