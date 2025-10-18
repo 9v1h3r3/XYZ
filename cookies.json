@@ -1,17 +1,29 @@
-[
-  {"name":"dbln","value":"%7B%22100048283089866%22%3A%22auejSSwV%22%7D","domain":"facebook.com","path":"/login/device-based/"},
-  {"name":"dpr","value":"2.52225661277771","domain":"facebook.com","path":"/"},
-  {"name":"ps_l","value":"1","domain":"facebook.com","path":"/"},
-  {"name":"ps_n","value":"1","domain":"facebook.com","path":"/"},
-  {"name":"sb","value":"7Y3eaAH5IxmgquKgkPGkqhpk","domain":"facebook.com","path":"/"},
-  {"name":"pas","value":"100026526483792%3Ak3FnHeCO0d%2C100048283089866%3AJXbPthkKUU","domain":"facebook.com","path":"/"},
-  {"name":"wl_cbv","value":"v2%3Bclient_version%3A2944%3Btimestamp%3A1760148837","domain":"facebook.com","path":"/"},
-  {"name":"vpd","value":"v1%3B824x424x2.52225661277771","domain":"facebook.com","path":"/"},
-  {"name":"locale","value":"en_US","domain":"facebook.com","path":"/"},
-  {"name":"datr","value":"vkDraMwA2ilgBiCTnipvr0jn","domain":"facebook.com","path":"/"},
-  {"name":"c_user","value":"100026526483792","domain":"facebook.com","path":"/"},
-  {"name":"wd","value":"990x1925","domain":"facebook.com","path":"/"},
-  {"name":"presence","value":"C%7B%22t3%22%3A%5B%5D%2C%22utc3%22%3A1760752731332%2C%22v%22%3A1%7D","domain":"facebook.com","path":"/"},
-  {"name":"fr","value":"1Q3dpA4CjiGVwTyhq.AWeoENrjxJ8gEZyyXmNpCX8urjsOtOk5cOktA0fnUa4fRKo83ok.Bo8vWT..AAA.0.0.Bo8vWT.AWc5jErOpjeKMwdC2rjRQJ7S0hU","domain":"facebook.com","path":"/"},
-  {"name":"xs","value":"25%3AriXifarSpTfmHw%3A2%3A1760379085%3A-1%3A-1%3A%3AAcXIRUYnyBZ3XwSbrFCkleaqWOD3J45YKd6MCrpcuQ","domain":"facebook.com","path":"/"}
-]
+ [
+    {
+        "name": "c_user",
+        "value": "100026526483792",
+        "domain": ".facebook.com",
+        "path": "/",
+        "httpOnly": true,
+        "secure": true,
+        "sameSite": "Lax"
+    },
+    {
+        "name": "fr",
+        "value": "1RupUICYd1OO24ttR.AWfDjg8GVZkJQxB1VpRet1BGlzhF5X-4I5ZrjRGT3gAwk6Dcn3w.Bo8Suz..AAA.0.0.Bo8Suz.AWcCln66fS42fhTIatPsOljeyO4",
+        "domain": ".facebook.com",
+        "path": "/",
+        "httpOnly": true,
+        "secure": true,
+        "sameSite": "Lax"
+    },
+    {
+        "name": "xs",
+        "value": "25%3AriXifarSpTfmHw%3A2%3A1760379085%3A-1%3A-1%3A%3AAcWrr1CTIewjdlkR6aNibkX2vi4p3cXYYns0D06FZg",
+        "domain": ".facebook.com",
+        "path": "/",
+        "httpOnly": true,
+        "secure": true,
+        "sameSite": "Lax"
+    }
+ ]
